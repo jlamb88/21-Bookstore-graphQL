@@ -5,16 +5,16 @@ const { signToken } = require('../utils/auth')
 // Create the functions that fulfill the queries defined in `typeDefs.js`
 const resolvers = {
   Query: {
-    me: async (parent, _id) => {
+    me: async (parent, { _id, username }) => {
       return await User.findOne({
-        $or: [{ _id: user ? user._id : params.id }, { username: params.username }],
+        $or: [{ _id }, { username }],
       })
     }
   },
 
   Mutation: {
-    login: async (parent, { username, email, password }) => {
-      const user = await User.findOne({ $or: [{ username }, { email }] });
+    loginUser: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
       if (!user) {
         throw new AuthenticationError("No user with this username or email");
       }

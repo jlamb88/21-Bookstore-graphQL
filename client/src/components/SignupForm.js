@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { Link } from 'react-router-dom'
 
 //import { createUser } from '../utils/API';
 //NEW
@@ -15,6 +16,8 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
+
+  const [addUser, { error, data }] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -38,16 +41,17 @@ const SignupForm = () => {
     //     throw new Error('something went wrong!');
     //   }
     //NEW
-    const [addUser, { error, data }] = useMutation(ADD_USER);
+
 
     try {
       const { data } = await addUser({
-        variables: { ...formState },
+        variables: { ...userFormData },
       });
 
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      // const { token, user } = await response.json();
+      // console.log(user);
+      //Auth.login(token);
+      Auth.login(data.addUser.token)
     } catch (err) {
       console.error(err);
       setShowAlert(true);
